@@ -15,15 +15,15 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
-	res.status(404);
-	log.debug('Not found URL: %s', req.url);
-	res.send({error: 'Not found'});
+res.status(404);
+log.debug('Not found URL: %s', req.url);
+res.send({error: 'Not found'});
 });
 
 app.use((err, req, res, next) => {
-	res.status(err.status || 500);
-	log.error('Internal error(%d)', res.statusCode, err.message);
-	res.send({error: err.message});
+res.status(err.status || 500);
+log.error('Internal error(%d)', res.statusCode, err.message);
+res.send({error: err.message});
 });
 
 app.get('/ErrorExample', (req, res, next) => {
@@ -49,7 +49,7 @@ app.get('/api/articles', (req, res) => {
             return res.send(articles);
         } else {
             res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            log.error('Internal error(%d): %s', res.statusCode,err.message);
 
             return res.send({ error: 'Server error' });
         }
@@ -79,7 +79,7 @@ article.save( err => {
             res.statusCode = 500;
             res.send({ error: 'Server error' });
         }
-        	log.error('Internal error(%d): %s',res.statusCode,err.message);
+        	log.error('Internal error(%d): %s', res.statusCode,err.message);
         }
     });
 });
@@ -96,7 +96,7 @@ app.get('/api/articles/:id', (req, res) => {
             return res.send({ status: 'OK', article:article });
         } else {
             res.statusCode = 500;
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            log.error('Internal error(%d): %s', res.statusCode,err.message);
 
             return res.send({ error: 'Server error' });
         }
@@ -136,6 +136,7 @@ app.put('/api/articles/:id',  (req, res) => {
 });
 
 app.delete('/api/articles/:id', (req, res) => {
+
     return ArticleModel.findById(req.params.id, (err, article) => {
         if(!article) {
             res.statusCode = 404;
