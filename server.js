@@ -26,26 +26,31 @@ app.use((err, req, res, next) => {
 	res.send({error: err.message});
 });
 
-app.get('/ErrorExample', (req, res, next) => 
-	next(new Error('Random error!')));
+app.get('/ErrorExample', (req, res, next) => {
+	next(new Error('Random error!'));
+});
 
-app.get('/api', (req, res) => 
-	res.send('Api is running'));
+app.get('/api', (req, res) => {
+	res.send('Api is running');
+});
 
 app.listen(port, () => {
 	console.log(`Express server listening on port ${port}`);
 });
 
-app.listen(config.get('port'), () => 
-	log.info('Express server listening on port ' + config.get('port')) );
+app.listen(config.get('port'), () => {
+	log.info('Express server listening on port ' + config.get('port'));
+});
 
 app.get('/api/articles', (req, res) => {
     return ArticleModel.find( (err, articles) => {
         if (!err) {
+
             return res.send(articles);
         } else {
             res.statusCode = 500;
             log.error('Internal error(%d): %s',res.statusCode,err.message);
+
             return res.send({ error: 'Server error' });
         }
     });
@@ -57,11 +62,12 @@ app.post('/api/articles', (req, res) => {
         author: req.body.author,
         description: req.body.description,
         images: req.body.images
-    });
+	});
 
 article.save( err => {
     if (!err) {
         log.info("article created");
+
         return res.send({ status: 'OK', article:article });
     } 
     else {
@@ -82,13 +88,16 @@ app.get('/api/articles/:id', (req, res) => {
     return ArticleModel.findById(req.params.id,  (err, article) => {
         if(!article) {
             res.statusCode = 404;
+
             return res.send({ error: 'Not found' });
         }
         if (!err) {
+
             return res.send({ status: 'OK', article:article });
         } else {
             res.statusCode = 500;
             log.error('Internal error(%d): %s',res.statusCode,err.message);
+
             return res.send({ error: 'Server error' });
         }
     });
@@ -98,6 +107,7 @@ app.put('/api/articles/:id',  (req, res) => {
     return ArticleModel.findById(req.params.id,  (err, article) => {
         if(!article) {
             res.statusCode = 404;
+
             return res.send({ error: 'Not found' });
         }
 
@@ -105,9 +115,11 @@ app.put('/api/articles/:id',  (req, res) => {
         article.description = req.body.description;
         article.author = req.body.author;
         article.images = req.body.images;
+
         return article.save(function (err) {
             if (!err) {
                 log.info("article updated");
+
                 return res.send({ status: 'OK', article:article });
             } else {
                 if(err.name == 'ValidationError') {
@@ -117,7 +129,7 @@ app.put('/api/articles/:id',  (req, res) => {
                     res.statusCode = 500;
                     res.send({ error: 'Server error' });
                 }
-                log.error('Internal error(%d): %s',res.statusCode,err.message);
+                log.error('Internal error(%d): %s', res.statusCode,err.message);
             }
         });
     });
@@ -127,15 +139,18 @@ app.delete('/api/articles/:id', (req, res) => {
     return ArticleModel.findById(req.params.id, (err, article) => {
         if(!article) {
             res.statusCode = 404;
+
             return res.send({ error: 'Not found' });
         }
         return article.remove( err => {
             if (!err) {
                 log.info("article removed");
+
                 return res.send({ status: 'OK' });
             } else {
                 res.statusCode = 500;
-                log.error('Internal error(%d): %s',res.statusCode,err.message);
+                log.error('Internal error(%d): %s', res.statusCode,err.message);
+
                 return res.send({ error: 'Server error' });
             }
         });
