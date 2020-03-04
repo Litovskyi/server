@@ -27,19 +27,19 @@ app.use((err, req, res, next) => {
 });
 
 app.get('/ErrorExample', (req, res, next) => {
-	next(new Error('Random error!'));
+    next(new Error('Random error!'));
 });
 
 app.get('/api', (req, res) => {
-	res.send('Api is running');
+    res.send('Api is running');
 });
 
 app.listen(port, () => {
-	console.log(`Express server listening on port ${port}`);
+    console.log(`Express server listening on port ${port}`);
 });
 
 app.listen(config.get('port'), () => {
-	log.info('Express server listening on port ' + config.get('port'));
+    log.info('Express server listening on port ' + config.get('port'));
 });
 
 app.get('/api/articles', (req, res) => {
