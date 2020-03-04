@@ -85,7 +85,7 @@ article.save( err => {
 });
 
 app.get('/api/articles/:id', (req, res) => {
-    return ArticleModel.findById(req.params.id,  (err, article) => {
+    return ArticleModel.findById(req.params.id, (err, article) => {
         if(!article) {
             res.statusCode = 404;
 
@@ -103,7 +103,7 @@ app.get('/api/articles/:id', (req, res) => {
     });
 });
 
-app.put('/api/articles/:id',  (req, res) => {
+app.put('/api/articles/:id', (req, res) => {
     return ArticleModel.findById(req.params.id,  (err, article) => {
         if(!article) {
             res.statusCode = 404;
