@@ -62,24 +62,22 @@ app.post('/api/articles', (req, res) => {
         author: req.body.author,
         description: req.body.description,
         images: req.body.images
-	});
+    });
 
-article.save( err => {
-    if (!err) {
-        log.info("article created");
+    article.save( err => {
+        if (!err) {
+            log.info("article created");
 
-        return res.send({ status: 'OK', article:article });
-    } 
-    else {
-        console.log(err);
-        if(err.name == 'ValidationError') {
-            res.statusCode = 400;
-            res.send({ error: 'Validation error' });
+            return res.send({ status: 'OK', article:article });
         } else {
-            res.statusCode = 500;
-            res.send({ error: 'Server error' });
-        }
-        	log.error('Internal error(%d): %s', res.statusCode,err.message);
+            if(err.name == 'ValidationError') {
+                res.statusCode = 400;
+                res.send({ error: 'Validation error' });
+            } else {
+                res.statusCode = 500;
+                res.send({ error: 'Server error' });
+            }
+            log.error('Internal error(%d): %s', res.statusCode,err.message);
         }
     });
 });
