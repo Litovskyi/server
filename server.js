@@ -7,16 +7,11 @@ var port               = 1337;
 var config             = require('./lib/config.js');
 var ArticleModel       = require('./lib/mongoose.js').ArticleModel;
 
-
-
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-
 app.use(app.router);
-
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
@@ -44,10 +39,8 @@ app.listen(port, () => {
 app.listen(config.get('port'), () => 
 	log.info('Express server listening on port ' + config.get('port')) );
 
-
-
-app.get('/api/articles', function(req, res) {
-    return ArticleModel.find(function (err, articles) {
+app.get('/api/articles', (req, res) => {
+    return ArticleModel.find( (err, articles) => {
         if (!err) {
             return res.send(articles);
         } else {
@@ -58,7 +51,7 @@ app.get('/api/articles', function(req, res) {
     });
 });
 
-app.post('/api/articles', function(req, res) {
+app.post('/api/articles', (req, res) => {
     var article = new ArticleModel({
         title: req.body.title,
         author: req.body.author,
@@ -66,26 +59,27 @@ app.post('/api/articles', function(req, res) {
         images: req.body.images
     });
 
-    article.save(function (err) {
-        if (!err) {
-            log.info("article created");
-            return res.send({ status: 'OK', article:article });
+article.save( err => {
+    if (!err) {
+        log.info("article created");
+        return res.send({ status: 'OK', article:article });
+    } 
+    else {
+        console.log(err);
+        if(err.name == 'ValidationError') {
+            res.statusCode = 400;
+            res.send({ error: 'Validation error' });
         } else {
-            console.log(err);
-            if(err.name == 'ValidationError') {
-                res.statusCode = 400;
-                res.send({ error: 'Validation error' });
-            } else {
-                res.statusCode = 500;
-                res.send({ error: 'Server error' });
-            }
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
+            res.statusCode = 500;
+            res.send({ error: 'Server error' });
+        }
+        	log.error('Internal error(%d): %s',res.statusCode,err.message);
         }
     });
 });
 
-app.get('/api/articles/:id', function(req, res) {
-    return ArticleModel.findById(req.params.id, function (err, article) {
+app.get('/api/articles/:id', (req, res) => {
+    return ArticleModel.findById(req.params.id,  (err, article) => {
         if(!article) {
             res.statusCode = 404;
             return res.send({ error: 'Not found' });
@@ -100,8 +94,8 @@ app.get('/api/articles/:id', function(req, res) {
     });
 });
 
-app.put('/api/articles/:id', function (req, res){
-    return ArticleModel.findById(req.params.id, function (err, article) {
+app.put('/api/articles/:id',  (req, res) => {
+    return ArticleModel.findById(req.params.id,  (err, article) => {
         if(!article) {
             res.statusCode = 404;
             return res.send({ error: 'Not found' });
@@ -129,13 +123,13 @@ app.put('/api/articles/:id', function (req, res){
     });
 });
 
-app.delete('/api/articles/:id', function (req, res){
-    return ArticleModel.findById(req.params.id, function (err, article) {
+app.delete('/api/articles/:id', (req, res) => {
+    return ArticleModel.findById(req.params.id, (err, article) => {
         if(!article) {
             res.statusCode = 404;
             return res.send({ error: 'Not found' });
         }
-        return article.remove(function (err) {
+        return article.remove( err => {
             if (!err) {
                 log.info("article removed");
                 return res.send({ status: 'OK' });
